@@ -83,6 +83,22 @@ The mental model below summarizes the main techniques covered in this book.
 
 
 &nbsp;
+## Experiments
+
+On top of the official book chapters, this copy of the repository includes a set of hands-on
+experiment notebooks, all built around the small `HuggingFaceTB/SmolLM-360M` base model and the
+[MATH-500](https://huggingface.co/datasets/HuggingFaceH4/MATH-500) benchmark. They are personal
+exploration/practice notebooks layered on top of the corresponding chapters, not part of the
+official book code.
+
+| Experiment | Chapter | Notebook | What it does |
+| --- | --- | --- | --- |
+| Ch02 Experimentation | Ch 2 | [Training_SmolLm.ipynb](ch02/Experimentation_Ch02/Training_SmolLm.ipynb) | Loads `SmolLM-360M`, tokenizes and generates a sample prompt, benchmarks CPU vs. GPU generation speed, and visualizes EOS-token handling — normal generation that stops at EOS vs. forcing generation to continue past it (with a `LogitsProcessor` and a colored HTML token view). |
+| Experiment 2: Math Eval Verifier | Ch 3 | [math500_smollm_eval.ipynb](ch03/Experiment%202%20Math%20Eval%20Verifier/math500_smollm_eval.ipynb) | An end-to-end MATH-500 evaluation pipeline for `SmolLM-360M`: few-shot chain-of-thought prompting, a brace-aware `\boxed{}` answer extractor, a SymPy-based math-equivalence verifier (with a self-test suite on edge cases like `1/2` vs. `\frac{1}{2}`), batched generation, accuracy breakdowns by difficulty level and subject with plots, an error-analysis pass over incorrect answers, and a helper to compare multiple model sizes back-to-back. |
+| Experiment 4: Temperature Reasoning Exploration | Ch 4 | [SmolLM_Temperature_Reasoning_Exploration.ipynb](ch04/Experiment%204/SmolLM_Temperature_Reasoning_Exploration.ipynb) | Explores inference-time scaling on `SmolLM-360M` alone (no teacher model): samples multiple solutions per MATH-500 problem across a range of temperatures, then reports **pass@k** (oracle: was any sample correct) and **self-consistency** (majority vote across samples) against a greedy-decoding baseline, including a worked diversity example and a summary plot. |
+| Experiment 8: Distillation | Ch 8 | [Model_Distillation_Math_500_fixed_v1.ipynb](ch08/Experiment%208-%20Distillation/Model_Distillation_Math_500_fixed_v1.ipynb) | Sequence-level knowledge distillation from `mistralai/Mistral-7B-Instruct-v0.2` (teacher, 4-bit quantized) into `SmolLM-360M` (student, via LoRA) on MATH-500: the teacher generates full worked solutions, and the student is supervised-fine-tuned on those solutions with the prompt portion masked out of the loss. This sequence-level approach sidesteps the tokenizer/vocab mismatch that makes logit-level KL distillation impossible across two different model families. The notebook evaluates teacher and student before and after distillation. |
+
+&nbsp;
 ## Companion Book
 
 Please note that *Build A Reasoning Model (From Scratch)* is a standalone book focused on methods to improve LLM reasoning.
